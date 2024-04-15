@@ -1,5 +1,6 @@
 package com.example.amongus
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,18 +14,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import com.example.amongus.model.User
 import com.example.amongus.retrofit.RetrofitInstance
 import com.example.amongus.ui.theme.AmongusTheme
@@ -41,7 +44,7 @@ class GameBoard : ComponentActivity() {
         intent.getStringExtra("USER_ID") ?: ""
     }
     private val connectedUsers = mutableStateListOf<User>()
-    //private val currentUser = mutableStateOf("")
+    private val currentUser = mutableStateOf<User?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,10 +55,24 @@ class GameBoard : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DisplayGameBoard(name = username, connectedUsers = connectedUsers)
+                    DisplayGameBoard(
+                        username = username,
+                        userid = userid,
+                        connectedUsers = connectedUsers,
+                        currentUser = currentUser.value ?: User(
+                            null,
+                            "",
+                            "",
+                            null,
+                            null,
+                            null
+                            )
+                    )
                 }
             }
         }
+
+        // Request Current User
 
         // Request Display All connected users
         RetrofitInstance.api.findConnected().enqueue(object : Callback<List<User>> {
@@ -75,21 +92,31 @@ class GameBoard : ComponentActivity() {
             }
         })
 
-        // gerer logout
-        //RetrofitInstance.api.disconnect().enqueue(object: Callback<User> {
-        //    override fun onResponse(call: Call<List<User>>, response: Response<List<User>>){
-        //        if(response.isSuccessful){
-        //            println(response.body())
-        //        }
-        //    }
-        //})
+        // Request the current user
+        RetrofitInstance.api.getUser(userid).enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                if (response.isSuccessful) {
+                    val user = response.body()
+                    println(user)
+                    currentUser.value = user
+                } else {
+                    println("Failed to fetch current user: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                println("Nope : ${t.message}")
+            }
+        })
     }
 
 }
 
 
 @Composable
-fun DisplayGameBoard(name : String, connectedUsers: List<User>, modifier: Modifier = Modifier) {
+fun DisplayGameBoard(username: String, userid: String, connectedUsers: List<User>, currentUser: User, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
     Column (modifier = modifier){
         Row (
             Modifier
@@ -98,7 +125,35 @@ fun DisplayGameBoard(name : String, connectedUsers: List<User>, modifier: Modifi
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
-            Text(text = "Welcome in the game ${name}")
+            Text(text = "Welcome in the game ${username}")
+        }
+
+
+        Button(
+            onClick = {
+                RetrofitInstance.api.disconnect(userid , currentUser).enqueue(object : Callback<User> {
+                    override fun onResponse(call: Call<User>, response: Response<User>) {
+                        if (response.isSuccessful) {
+                            // Déconnexion réussie, vous pouvez gérer ici les actions post-déconnexion
+                            // Par exemple, rediriger l'utilisateur vers une autre activité
+                            println("Logout ok")
+
+                            val intentHome = Intent(context, MainActivity::class.java)
+                            context.startActivity(intentHome)
+
+                        } else {
+                            println("Failed to disconnect: ${response.code()}")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<User>, t: Throwable) {
+                        println("Failed to disconnect: ${t.message}")
+                    }
+                })
+            },
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text("Disconnect")
         }
 
         // Vérifier si la liste des utilisateurs connectés est vide
@@ -113,7 +168,9 @@ fun DisplayGameBoard(name : String, connectedUsers: List<User>, modifier: Modifi
                         UserAvatar(user = user, modifier = Modifier.size(48.dp))
                         Text(text = "User : ${user.username}" +
                                 if (user.role.isNullOrEmpty()) " | Role : - " else " | Role : ${user.role}")
-                        Spacer(modifier = Modifier.width(8.dp).height(16.dp))
+                        Spacer(modifier = Modifier
+                            .width(8.dp)
+                            .height(24.dp))
                     }
                 }
             }
@@ -132,4 +189,6 @@ fun UserAvatar(user: User, modifier: Modifier = Modifier) {
             //.width(75.dp)
     )
 }
+
+
 

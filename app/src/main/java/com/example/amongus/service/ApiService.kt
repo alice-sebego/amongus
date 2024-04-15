@@ -6,6 +6,8 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface ApiService {
     @GET("users/connected")
@@ -17,6 +19,10 @@ interface ApiService {
     @POST("users/login")
     fun login(@Body user : User): Call<User>
 
-    @POST("users/disconnect")
-    fun disconnect(@Body user: User): Call<User>
+    @PUT("users/{userId}/disconnect")
+    fun disconnect(@Path("userId") userId: String,@Body user: User): Call<User>
+
+    @GET("users/{userId}")
+    fun getUser(@Path("userId") userId: String): Call<User>
+
 }
