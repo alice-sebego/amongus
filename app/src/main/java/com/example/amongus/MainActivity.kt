@@ -65,7 +65,7 @@ fun RegisterForm(modifier: Modifier = Modifier) {
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text("Your Name") },
+            label = { Text(text="Your Name") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -74,7 +74,7 @@ fun RegisterForm(modifier: Modifier = Modifier) {
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Your password") },
+            label = { Text(text="Your password") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),

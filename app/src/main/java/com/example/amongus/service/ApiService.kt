@@ -25,4 +25,7 @@ interface ApiService {
     @GET("users/{userId}")
     fun getUser(@Path("userId") userId: String): Call<User>
 
+    @GET("users")
+    fun getUsers(): Call<List<User>>
+
 }
