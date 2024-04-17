@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -148,7 +149,7 @@ fun SeeAllUser(username : String, userid : String, allUsers: List<User>, current
             )
         } else {
             // Afficher la liste des utilisateurs
-            Column (modifier = Modifier.padding(16.dp)){
+            Column(modifier = Modifier.padding(16.dp)){
                 Text(
                     text = "Registered Users:",
                     modifier = Modifier,
@@ -171,7 +172,9 @@ fun SeeAllUser(username : String, userid : String, allUsers: List<User>, current
                                 fontSize = 16.sp,
                                 style = TextStyle.Default
                             )
-                            Button(onClick = { /*TODO*/ }) {
+                            Button(
+                                onClick = { /*TODO*/ }
+                            ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(Icons.Rounded.MailOutline , contentDescription = "Send a message" )
                                 }
@@ -179,29 +182,7 @@ fun SeeAllUser(username : String, userid : String, allUsers: List<User>, current
                         }
                     }
 
-
-                    /*ListItem(
-                        headlineContent = {
-                            Text(
-                                text="One line list item with 24x24 icon",
-                                modifier = Modifier,
-                                color = Color.Black,
-                                fontSize = 16.sp,
-                                style = TextStyle.Default
-                            )
-                        },
-                        leadingContent = {
-                            Icon(
-                                Icons.Filled.Favorite,
-                                contentDescription = "Localized description",
-                            )
-                        }
-                    )
-
-                    //Divider(
-                    //    modifier = Modifier.fillMaxHeight().width(1.dp)
-                    //)
-                    */
+                    Spacer(modifier = Modifier.height(8.dp))
 
                 }
             }

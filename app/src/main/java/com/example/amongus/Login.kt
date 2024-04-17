@@ -91,7 +91,8 @@ fun LoginForm(modifier: Modifier = Modifier) {
                         password = password,
                         connected = false,
                         role = null,
-                        messages = emptyList()
+                        messages = emptyList(),
+                        picture = null
                     )
 
                     RetrofitInstance

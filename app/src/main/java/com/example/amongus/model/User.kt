@@ -6,6 +6,7 @@ data class User(
     val password: String,
     val connected : Boolean? = null,
     val role : String? = null,
-    val messages: List<String>? = null
+    val messages: List<String>? = null,
+    val picture : String? = null
 )
 

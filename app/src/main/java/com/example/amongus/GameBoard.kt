@@ -68,6 +68,7 @@ class GameBoard : ComponentActivity() {
                             "",
                             null,
                             null,
+                            null,
                             null
                             )
                     )
@@ -132,7 +133,22 @@ fun DisplayGameBoard(username: String, userid: String, connectedUsers: List<User
                 fontSize = 16.sp,
                 style = TextStyle.Default
             )
+
+            Button(
+                onClick = {
+                    val intentUserAccount = Intent(context, UserAccount::class.java).apply {
+                        putExtra("USER_ID", userid)
+                    }
+                    context.startActivity(intentUserAccount)
+                },
+                modifier = Modifier.padding(16.dp)
+            ) {
+               Text(
+                   text="My profile"
+               )
+            }
         }
+
 
         Button(
             onClick = {
@@ -193,10 +209,12 @@ fun DisplayGameBoard(username: String, userid: String, connectedUsers: List<User
                             fontSize = 16.sp,
                             style = TextStyle.Default
                         )
-                        Spacer(modifier = Modifier
-                            .width(8.dp)
-                            .height(24.dp))
+                        //Spacer(modifier = Modifier
+                        //    .width(8.dp)
+                        //    .height(24.dp))
                     }
+
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }

@@ -89,7 +89,7 @@ fun RegisterForm(modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
-                val userRegister = User(username = username, password = password, connected = false, role = null, messages = emptyList())
+                val userRegister = User(username = username, password = password, connected = false, role = null, messages = emptyList(), picture = null)
                 RetrofitInstance.api.register(userRegister).enqueue(object : Callback<User>{
                     override fun onResponse(call: Call<User>, response: Response<User>){
                         if(response.isSuccessful){
