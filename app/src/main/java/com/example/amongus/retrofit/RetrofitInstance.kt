@@ -13,5 +13,3 @@ object RetrofitInstance {
             .create(ApiService::class.java)
     }
 }
-
-//.baseUrl("http://82.165.127.44/")

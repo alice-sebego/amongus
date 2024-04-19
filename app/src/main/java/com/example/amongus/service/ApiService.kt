@@ -1,6 +1,7 @@
 package com.example.amongus.service
 
 import com.example.amongus.model.File
+import com.example.amongus.model.ImgurResponse
 import com.example.amongus.model.User
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -32,9 +33,12 @@ interface ApiService {
     @GET("users")
     fun getUsers(): Call<List<User>>
 
+    @PUT("users/{userId}")
+    fun updateUser(@Path("userId") userId: String, @Body user: User): Call<User>
+
     @Multipart
     @POST("file/upload")
-    fun uploadPictureProfile(@Part file: MultipartBody.Part): Call<File>
+    fun uploadPictureProfile(@Part file: MultipartBody.Part): Call<ImgurResponse>
 
 
 }
