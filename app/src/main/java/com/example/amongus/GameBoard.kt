@@ -202,7 +202,7 @@ fun DisplayGameBoard(username: String, userid: String, connectedUsers: List<User
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         UserAvatar(user = user, modifier = Modifier.size(48.dp))
                         Text(
-                            text = "User : ${user.username}" +
+                            text =  if (user.username == username) "You" else "User : ${user.username}"  +
                                 if (user.role.isNullOrEmpty()) " | Role : - " else " | Role : ${user.role}",
                             modifier = Modifier,
                             color = Color.Black,

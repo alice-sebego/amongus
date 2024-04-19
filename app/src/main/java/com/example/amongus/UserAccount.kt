@@ -3,6 +3,7 @@ package com.example.amongus
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,16 +19,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.amongus.model.User
 import com.example.amongus.retrofit.RetrofitInstance
 import com.example.amongus.ui.theme.AmongusTheme
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+//import com.google.accompanist.coil.CoilImage
+
 
 class UserAccount : ComponentActivity() {
     private val userid: String by lazy {
@@ -43,7 +48,17 @@ class UserAccount : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
+                    DisplayProfile(
+                        currentUser.value ?: User(
+                            null,
+                            "",
+                            "",
+                            null,
+                            null,
+                            null,
+                            null
+                        )
+                    )
                 }
             }
         }
@@ -95,6 +110,20 @@ fun DisplayProfile(user: User, modifier: Modifier = Modifier){
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Picture
+            if (!user.picture.isNullOrBlank()) {
+                AsyncImage(
+                    model = user.picture,
+                    contentDescription = "User profile picture"
+                )
+            } else {
+                // Load default image from resources
+                Image(
+                    painter = painterResource(id = R.drawable.anonymous),
+                    contentDescription = "Default profile picture",
+                    modifier = Modifier.height(120.dp)
+                )
+            }
+
         }
 
         Row(
